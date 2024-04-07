@@ -79,6 +79,7 @@ disp("x2origin = " + string(x2origin));
 disp("x2n = [" + strcat((string(x2n)), " ") + "]");
 disp("yorigin = " + string(yorigin));
 disp("yn = [" + strcat((string(yn)), " ") + "]");
+//draw plot
 clf
 draw_plot(x1n, x1origin, "red")
 draw_plot(x2n, x2origin, "magenta")

@@ -1,7 +1,7 @@
 clear
 xn = [1 2 -1 3 2]
 xorigin = 3
-k = 2
+k = 4
 
 function [yn, yorigin] = advance(xn, xorigin, k)
 //condition for input

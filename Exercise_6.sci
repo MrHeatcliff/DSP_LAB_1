@@ -2,44 +2,41 @@
 clear
 //input
 xn = [1 2 3 1]
-xorigin = 1
+xorigin = 4
 hn = [1 2 1 -1]
-horigin = 2
+horigin = 4
 // some functions for tasks
 function [yn, yorigin] = convolution (xn, xorigin, hn, horigin)
     yn = convol(xn, hn)
     yorigin = xorigin + horigin - 1
 endfunction
 
-function draw_plot(xn, xorigin, x_label, y_label, plot_title)
+function draw_plot(xn, xorigin , _color)
     n = 1:size(xn,"c")
     x = n - xorigin    
     y = xn
-    rect = [x(1) - 0.5, min(y)-0.5, x(size(xn,"c"))+0.5, max(y) + 0.5] 
-    nax = [0,-1,-1, -1]
-    scatter(x, y, , "black", "fill")
-    plot2d3(x, y, nax = nax, rect = rect)
-    xgrid(color("grey75"), 1, 7)
-    if ~exists("x_label","local") then
-        x_label = ""
-    end
-    if ~exists("y_label","local") then
-        y_label = ""
-    end
-    if ~exists("plot_title","local") then
-        plot_title = ""
-    end
-    xlabel(x_label, "fontsize", 4.5, "color", "blue")
-    ylabel(y_label, "fontsize", 4.5, "color", "seagreen")
-    title(plot_title, "fontsize", 5, "color", "black")
+    
+    plot2d(x, y, -1)
+    af = gca()
+    af.x_location = "origin"
+    af.y_location = "origin"
+    // configure polyline property 
+    p = af.children(1).children(1)
+    p.polyline_style = 3
+    p.foreground = color(_color)
+    p.mark_style = 9
+    p.mark_offset = 1
+    p.mark_stride = 2
+    p.mark_foreground = color(_color)
+    p.mark_background = color(_color)
 endfunction
 //calculate and draw plots
 [yn, yorigin] = convolution (xn, xorigin, hn, horigin)
-clf 
-subplot(2,1,1);
-draw_plot(xn,xorigin, "n", "x(n)", "x(n)")
-subplot(2,1,2);
-draw_plot(hn,horigin, "n", "h(n)", "h(n)")
-f1 = scf(1)
-clf
-draw_plot(yn,yorigin, "n", "y(n)", ["y(n) = x(n)" "$*$" "h(n)"])
+// display
+disp("xorigin = " + string(xorigin));
+disp("xn = [" + strcat((string(xn)), " ") + "]");
+disp("horigin = " + string(horigin));
+disp("hn = [" + strcat((string(hn)), " ") + "]");
+disp("yorigin = " + string(yorigin));
+disp("yn = [" + strcat((string(yn)), " ") + "]");
+
