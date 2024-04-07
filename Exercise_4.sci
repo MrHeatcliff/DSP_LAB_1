@@ -6,6 +6,26 @@ x1origin = 1
 x2n = [0 1 2 3]
 x2origin = 2
 // some functions for tasks
+
+function [yn, yorigin] = advance(xn, xorigin, k)
+//condition for input
+    if k > 0 then
+        yorigin = xorigin + k
+        if yorigin > size(xn,"c") then
+            // add more zero vectors if overflow
+            yn = cat(2, xn, zeros(1:(yorigin - size(xn,"c"))))
+        else
+            // no overflow, y is same as x
+            yn = xn
+        end
+        
+    else
+        yn = 0
+        yorigin = -1
+        halt('ERROR: Enter k > 0 or using the delay function')
+    end
+endfunction
+
 function [yn, yorigin] = add (x1n, x1origin, x2n, x2origin)
     i_min = min(1 - x1origin, 1 - x2origin)
     i_max = max(size(x1n,"c") - x1origin, size(x2n,"c") - x2origin)
@@ -31,34 +51,49 @@ function [yn, yorigin] = add (x1n, x1origin, x2n, x2origin)
     end
 endfunction
 
-function draw_plot(xn, xorigin, x_label, y_label, plot_title)
+function draw_plot(xn, xorigin , _color)
     n = 1:size(xn,"c")
     x = n - xorigin    
     y = xn
-    rect = [x(1) - 0.5, min(y)-0.5, x(size(xn,"c"))+0.5, max(y) + 0.5] 
-    nax = [0,-1,-1, -1]
-    scatter(x, y, , "black", "fill")
-    plot2d3(x, y, nax = nax, rect = rect)
-    xgrid(color("grey75"), 1, 7)
-    if ~exists("x_label","local") then
-        x_label = ""
-    end
-    if ~exists("y_label","local") then
-        y_label = ""
-    end
-    if ~exists("plot_title","local") then
-        plot_title = ""
-    end
-    xlabel(x_label, "fontsize", 4.5, "color", "blue")
-    ylabel(y_label, "fontsize", 4.5, "color", "seagreen")
-    title(plot_title, "fontsize", 5, "color", "black")
+    
+    plot2d(x, y, -1)
+    af = gca()
+    af.x_location = "origin"
+    af.y_location = "origin"    
+    // configure polyline property 
+    p = af.children(1).children(1)
+    p.polyline_style = 3
+    p.foreground = color(_color)
+    p.mark_style = 9
+    p.mark_offset = 1
+    p.mark_stride = 2
+    p.mark_foreground = color(_color)
+    p.mark_background = color(_color)
 endfunction
-//calculate and draw plots
+//calculate
 [yn, yorigin] = add(x1n, x1origin, x2n, x2origin)
-clf 
-subplot(3,1,1);
-draw_plot(x1n,x1origin, "n", "x1(n)", "x1(n)")
-subplot(3,1,2);
-draw_plot(x2n,x2origin, "n", "x2(n)", "x2(n)")
-subplot(3,1,3);
-draw_plot(yn,yorigin, "n", "y(n)", "y(n) = x1(n)+x2(n)")
+//display
+disp("x1origin = " + string(x1origin));
+disp("x1n = [" + strcat((string(x1n)), " ") + "]");
+disp("x2origin = " + string(x2origin));
+disp("x2n = [" + strcat((string(x2n)), " ") + "]");
+disp("yorigin = " + string(yorigin));
+disp("yn = [" + strcat((string(yn)), " ") + "]");
+clf
+draw_plot(x1n, x1origin, "red")
+draw_plot(x2n, x2origin, "magenta")
+draw_plot(yn, yorigin, "blue")
+// add some properties
+legend(['x1n', 'x2n', 'yn'], pos = -2)
+a = gca()
+a.grid = [-1, 33]
+a.children(1).font_size = 3
+t = a.title
+t.font_foreground = color("red")
+t.font_size = 5
+str = "y = x1(n) + x2(n)"
+t.text = str
+t = a.x_label
+t.font_foreground = color("blue")
+t.font_size = 5
+t.text = "n"
