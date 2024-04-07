@@ -12,6 +12,13 @@ x2 = [0 1 2 3 0 0]
 //calculate
 y = x1 + x2
 //output
+//print all
+disp("x1 =")
+disp(x1)
+disp("x2 =")
+disp(x2)
+disp("y = x1 + x2 =")
+disp(y)
 // plot x1
 f0 = scf(0)
 clf 
