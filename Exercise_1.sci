@@ -17,23 +17,51 @@ function [yn, yorigin] = delay(xn, xorigin, k)
 endfunction
 
 //input
-xn = [0 1 -2 3 6 0];
-xorigin = 3;
-k = 1;
+xn = [1 -2 3 6];
+xorigin = 2;
+k = 4;
 // output
 [yn, yorigin] = delay(xn, xorigin, k);
 
-//graphically display xn and yn
+//conditions for input
+if xorigin < 1 | xorigin > size(xn,"c") then
+    halt('ERROR: Invalid input')
+end
+
+function draw_plot(xn, xorigin , _color)
+    n = 1:size(xn,"c")
+    x = n - xorigin    
+    y = xn
+    
+    plot2d(x, y, -1)
+    af = gca()
+    af.x_location = "origin"
+    af.y_location = "origin"
+    // configure polyline property 
+    p = af.children(1).children(1)
+    p.polyline_style = 3
+    p.foreground = color(_color)
+    p.mark_style = 9
+    p.mark_offset = 1
+    p.mark_stride = 2
+    p.mark_foreground = color(_color)
+    p.mark_background = color(_color)
+endfunction
+//draw plot
 clf
-n = [-3:2];
-subplot(1,2,1);
-plot2d3(n,xn);
-xgrid(color("grey75"), 1, 7)
-xlabel n fontsize 4.5 color red
-title x(n) fontsize 5 color blue
-n= [-2:3];
-subplot(1,2,2);
-plot2d3(n,yn);
-xgrid(color("grey75"), 1, 7)
-xlabel n fontsize 4.5 color red
-title y(n) fontsize 5 color blue
+draw_plot(xn, xorigin, "red")
+draw_plot(yn, yorigin, "blue")
+// add some properties
+legend(['xn', 'yn'], pos = -2)
+a = gca()
+a.grid = [-1, 33]
+a.children(1).font_size = 3
+t = a.title
+t.font_foreground = color("red")
+t.font_size = 5
+str = "y = x(n - k), k = " + string(k)
+t.text = str
+t = a.x_label
+t.font_foreground = color("blue")
+t.font_size = 5
+t.text = "n"

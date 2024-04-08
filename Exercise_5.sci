@@ -25,31 +25,57 @@ function [yn, yorigin] = multi(x1n, x1origin, x2n, x2origin)
 endfunction
 
 //input
-x1n = [0 1 -2 3 6 0];
-x2n = [0 -1 2 4 5 0];
-x1origin = 2;
-x2origin = 3;
+x1n = [1 -2 3 6];
+x2n = [-1 2 4 5];
+x1origin = 1;
+x2origin = 2;
 k = 1;
 // output
 [yn, yorigin] = multi(x1n, x1origin, x2n, x2origin);
 
-//graphically display x1n, x2n and yn
+function draw_plot(xn, xorigin , _color)
+    n = 1:size(xn,"c")
+    x = n - xorigin    
+    y = xn
+    
+    plot2d(x, y, -1)
+    af = gca()
+    af.x_location = "origin"
+    af.y_location = "origin"    
+    // configure polyline property 
+    p = af.children(1).children(1)
+    p.polyline_style = 3
+    p.foreground = color(_color)
+    p.mark_style = 9
+    p.mark_offset = 1
+    p.mark_stride = 2
+    p.mark_foreground = color(_color)
+    p.mark_background = color(_color)
+endfunction
+//calculate
+//display
+disp("x1origin = " + string(x1origin));
+disp("x1n = [" + strcat((string(x1n)), " ") + "]");
+disp("x2origin = " + string(x2origin));
+disp("x2n = [" + strcat((string(x2n)), " ") + "]");
+disp("yorigin = " + string(yorigin));
+disp("yn = [" + strcat((string(yn)), " ") + "]");
+//draw plot
 clf
-n = [-2:3];
-subplot(1,3,1);
-plot2d3(n,x1n);
-xgrid(color("grey75"), 1, 7)
-xlabel n fontsize 4.5 color red
-title x1(n) fontsize 5 color blue
-n = [-3:2];
-subplot(1,3,2);
-plot2d3(n,x2n);
-xgrid(color("grey75"), 1, 7)
-xlabel n fontsize 4.5 color red
-title x2(n) fontsize 5 color blue
-n= [-3:3];
-subplot(1,3,3);
-plot2d3(n,yn);
-xgrid(color("grey75"), 1, 7)
-xlabel n fontsize 4.5 color red
-title y(n) fontsize 5 color blue
+draw_plot(x1n, x1origin, "red")
+draw_plot(x2n, x2origin, "magenta")
+draw_plot(yn, yorigin, "blue")
+// add some properties
+legend(['x1n', 'x2n', 'yn'], pos = -2)
+a = gca()
+a.grid = [-1, 33]
+a.children(1).font_size = 3
+t = a.title
+t.font_foreground = color("red")
+t.font_size = 5
+str = "y = x1(n) . x2(n)"
+t.text = str
+t = a.x_label
+t.font_foreground = color("blue")
+t.font_size = 5
+t.text = "n"
