@@ -1,58 +1,35 @@
 //start with a clear
 clear
-//fucntion fold
-function [yn, yorigin] = fold(xn, xorigin)
-    sizex = size(xn, "c");
-    yn = flipdim(xn, 2)
-    yorigin = sizex - xorigin + 1;
-endfunction
+//fucntion 
+
 
 //input
-xn = [1 -2  -1 3 2];
-xorigin = 3;
-k = 1;
+
 // output
-[yn, yorigin] = fold(xn, xorigin);
 
-if xorigin < 1 | xorigin > size(xn,"c") then
-    halt('ERROR: Invalid input')
-end
-
-function draw_plot(xn, xorigin , _color)
-    n = 1:size(xn,"c")
-    x = n - xorigin    
-    y = xn
-    
-    plot2d(x, y, -1)
-    af = gca()
-    af.x_location = "origin"
-    af.y_location = "origin"
-    // configure polyline property 
-    p = af.children(1).children(1)
-    p.polyline_style = 3
-    p.foreground = color(_color)
-    p.mark_style = 9
-    p.mark_offset = 1
-    p.mark_stride = 2
-    p.mark_foreground = color(_color)
-    p.mark_background = color(_color)
-endfunction
 //draw plot
-clf
-draw_plot(xn, xorigin, "red")
-draw_plot(yn, yorigin, "blue")
-// add some properties
-legend(['xn', 'yn'], pos = -2)
-a = gca()
-a.grid = [-1, 33]
-a.children(1).font_size = 3
-t = a.title
-t.font_foreground = color("red")
-t.font_size = 5
-str = "y = x(-n)"
-t.text = str
-t = a.x_label
-t.font_foreground = color("blue")
-t.font_size = 5
-t.text = "n"
-
+x = -4:0.01:4
+y = 1 ./ sqrt(1-2*0.1*cos(x)+0.1^2)
+f0 = scf(0);
+plot2d(x, y)
+title("Amplitude spectrum")
+xlabel("W")
+ylabel("|X(W)|")
+f1 = scf(1);
+y = atan(-0.1*sin(x) ./ (1-0.1*cos(x)))
+plot2d(x, y)
+title("Phase spectrum")
+xlabel("W")
+ylabel("angle(X(W)|)")
+f2 = scf(2);
+y = sqrt ((1 + cos(x) + cos(2*x) + cos(3*x)) .^ 2 + (sin(x) + sin(2*x) + sin(3*x)) .^ 2)
+plot2d(x, y)
+title("Amplitude spectrum")
+xlabel("W")
+ylabel("|X(W)|")
+f3 = scf(3);
+y = atan(-1*(sin(x) + sin(2*x) + sin(3*x)) ./ (1 + cos(x) + cos(2*x) + cos(3*x)))
+plot2d(x, y)
+title("Phase spectrum")
+xlabel("W")
+ylabel("angle(X(W)|)")
